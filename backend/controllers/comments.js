@@ -1,5 +1,7 @@
 const Comment = require("../models/comments");
+const User = require("../models/users");
 
+//controller to post a comment
 exports.createComment = async (req, res, next) => {
   try {
     await Comment.create({
@@ -13,10 +15,13 @@ exports.createComment = async (req, res, next) => {
   }
 };
 
+//controller to get all the comments for an article
 exports.getAllComment = async (req, res, next) => {
   try {
     const comments = await Comment.findAndCountAll({
       where: { articleId: req.params.id },
+      order: [["updatedAt", "DESC"]],
+      include: { model: User, attributes: ["last_name", "first_name"] },
     });
     return res.status(200).json(comments);
   } catch (error) {
@@ -24,9 +29,10 @@ exports.getAllComment = async (req, res, next) => {
   }
 };
 
+//controller to delete a comment with its id
 exports.deleteComment = async (req, res, next) => {
   try {
-    const comment = await Comment.findOne({ where: { userId:req.auth.userId , articleId: req.params.id} });
+    const comment = await Comment.findOne({ where: { id: req.params.id } });
     if (!comment) {
       return res.status(404).json({ error: "Commentaire non trouvé !" });
     } else if (comment.userId == req.auth.userId || req.auth.role == 2) {

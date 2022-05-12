@@ -1,5 +1,7 @@
 const multer = require('multer');
 
+//the multer config middleware will process the file sent with the article and store it
+
 const MIME_TYPES = {
   'image/jpg': 'jpg',
   'image/jpeg': 'jpg',

@@ -1,5 +1,6 @@
 const Like = require("../models/likes");
 
+//controller to post a like on an article
 exports.like = async (req, res, next) => {
   try {
     if (req.body.userId == req.auth.userId) {
@@ -16,6 +17,7 @@ exports.like = async (req, res, next) => {
   }
 };
 
+//controller to get all the likes for an articleswith the article id
 exports.getLikePerArticle = async (req, res, next) => {
   try {
     const likesPerArticle = await Like.findAndCountAll({
@@ -27,16 +29,19 @@ exports.getLikePerArticle = async (req, res, next) => {
   }
 };
 
+//controller to delete a like on an article
 exports.deleteLike = async (req, res, next) => {
-  try{
-    const like = await Like.findOne({ where: { userId:req.auth.userId , articleId: req.params.id} });
+  try {
+    const like = await Like.findOne({
+      where: { userId: req.auth.userId, articleId: req.params.id },
+    });
     if (!like) {
       return res.status(404).json({ error: "Like non trouvé !" });
     } else {
       await like.destroy();
       res.status(200).json({ message: "Like supprimé !" });
     }
-  } catch(error){
+  } catch (error) {
     res.status(500).json({ error });
   }
 };

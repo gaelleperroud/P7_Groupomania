@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/users");
 
+//controller to create a user
+//the password is hashed before sent in the dtb
 exports.signup = async (req, res, next) => {
   try {
     const hash = await bcrypt.hash(req.body.password, 10);
@@ -19,6 +21,9 @@ exports.signup = async (req, res, next) => {
   }
 };
 
+//controller to login
+//find the user in dtb with email and compare password
+//then return token & userId & roleId
 exports.login = async (req, res, next) => {
   try {
     const user = await User.findOne({ where: { email: req.body.email } });
@@ -47,6 +52,7 @@ exports.login = async (req, res, next) => {
   }
 };
 
+//controller to modify the user account
 exports.modifyUser = async (req, res, next) => {
   try {
     const user = await User.findOne({ where: { id: req.params.id } });
@@ -77,6 +83,7 @@ exports.modifyUser = async (req, res, next) => {
   }
 };
 
+//controller to delete a user account
 exports.deleteUser = async (req, res, next) => {
   try {
     const user = await User.findOne({ where: { id: req.params.id } });
